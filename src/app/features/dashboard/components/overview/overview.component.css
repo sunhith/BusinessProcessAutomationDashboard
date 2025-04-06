@@ -1,0 +1,35 @@
+/* src/app/dashboard/components/overview/overview.component.scss */
+.overview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .kpi-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  
+  .kpi-card {
+    height: 140px;
+    
+    .kpi-value {
+      font-size: 42px;
+      font-weight: bold;
+      text-align: center;
+      color: #3f51b5;
+      margin-top: 10px;
+    }
+  }
+  
+  .chart-card {
+    height: 300px;
+    
+    .chart-container {
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
+  }
+  

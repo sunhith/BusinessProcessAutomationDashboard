@@ -1,0 +1,89 @@
+/* src/app/dashboard/components/process-table/process-table.component.scss */
+.table-card {
+    height: 100%;
+    
+    mat-card-content {
+      height: calc(100% - 64px);
+      overflow: auto;
+    }
+  }
+  
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .process-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .process-detail-content {
+    background-color: white;
+    padding: 24px;
+    border-radius: 4px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+  
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+  
+  .value {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .monthly-data-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 16px 0;
+  }
+  
+  .monthly-item {
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .month {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+  

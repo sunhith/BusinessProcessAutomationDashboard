@@ -1,0 +1,41 @@
+<!-- src/app/dashboard/dashboard.component.html -->
+<div class="dashboard-container">
+    <mat-toolbar color="primary">
+      <span>Process Dashboard</span>
+      <span class="spacer"></span>
+      
+      <button mat-raised-button (click)="fileInput.click()">
+        <mat-icon>upload_file</mat-icon> Import Excel
+      </button>
+      <input hidden type="file" #fileInput (change)="onFileSelected($event)" accept=".xlsx, .xls">
+      
+      <button mat-raised-button class="ml-2" (click)="onLoadFromApi()">
+        <mat-icon>cloud_download</mat-icon> Load from API
+      </button>
+    </mat-toolbar>
+    
+    <div class="content-container">
+      <app-filter
+        (searchChanged)="onSearch($event)"
+        (businessUnitChanged)="onFilterBusinessUnit($event)">
+      </app-filter>
+      
+      <div class="dashboard-grid">
+        <!-- Overview section -->
+        <div class="overview-section">
+          <app-overview></app-overview>
+        </div>
+        
+        <!-- Charts section -->
+        <div class="charts-section">
+          <app-process-chart></app-process-chart>
+        </div>
+        
+        <!-- Table section -->
+        <div class="table-section">
+          <app-process-table></app-process-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  

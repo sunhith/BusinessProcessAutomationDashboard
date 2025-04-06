@@ -1,0 +1,60 @@
+<!-- src/app/dashboard/components/overview/overview.component.html -->
+<div class="overview-container">
+    <div class="kpi-cards">
+      <mat-card class="kpi-card">
+        <mat-card-header>
+          <mat-card-title>Total Processes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="kpi-value">{{(summary?.totalProcesses) ?? 0}}</div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="kpi-card">
+        <mat-card-header>
+          <mat-card-title>Business Units</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="kpi-value">{{(summary?.totalBusinessUnits) ?? 0}}</div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="kpi-card">
+        <mat-card-header>
+          <mat-card-title>Avg. Min Items</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="kpi-value">{{(summary?.averageMinItems | number:'1.0-0') ?? 0}}</div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="kpi-card">
+        <mat-card-header>
+          <mat-card-title>Total Processed Items</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="kpi-value">{{(summary?.totalProcessedItems | number:'1.0-0') ?? 0}}</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Monthly Trend Overview</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <!-- Only render chart in browser environment -->
+            <canvas *ngIf="isBrowser" baseChart 
+              [data]="chartData"
+              [options]="chartOptions"
+              [type]="'bar'">
+            </canvas>
+            <div *ngIf="!isBrowser" class="ssr-placeholder">
+              Chart will display when loaded in browser
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+  </div>
+  
