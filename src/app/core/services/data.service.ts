@@ -5,6 +5,10 @@ import { ProcessData, ProcessSummary, MonthlyDataPoint } from '../../shared/mode
 import { ExcelService } from './excel.service';
 import { httpResource } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { DataSourceStrategy } from '../strategies/data-source.strategy';
+import { ApiDataSourceStrategy } from '../strategies/api-data-source.strategy';
+import { ExcelDataSourceStrategy } from '../strategies/excel-data-source.strategy';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +17,12 @@ export class DataService {
   private processDataSignal = signal<ProcessData[]>([]);
   private searchTextSignal = signal<string>('');
   private selectedBusinessUnitSignal = signal<string>('');
+
+  // Add these at the top of your DataService class
+  private apiStrategy: DataSourceStrategy;
+  private excelStrategy: DataSourceStrategy;
+  private currentStrategy: DataSourceStrategy;
+
   
   // Computed signals for derived data
   public filteredData = computed(() => {
@@ -96,7 +106,35 @@ export class DataService {
   constructor(
     private http: HttpClient,
     private excelService: ExcelService
-  ) { }
+  ) {
+    // Initialize strategies
+    this.apiStrategy = new ApiDataSourceStrategy(http);
+    this.excelStrategy = new ExcelDataSourceStrategy(excelService);
+    
+    // Default to Excel strategy
+    this.currentStrategy = this.excelStrategy;
+  }
+  
+    // Strategy selection methods
+  useApiStrategy(): void {
+    this.currentStrategy = this.apiStrategy;
+  }
+
+  useExcelStrategy(): void {
+    this.currentStrategy = this.excelStrategy;
+  }
+
+  // Generic load method using current strategy
+  async loadData(source: any): Promise<void> {
+    try {
+      const data = await this.currentStrategy.loadData(source);
+      this.processDataSignal.set(data);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
+  }
+
+
   
   // Observable for components that need reactivity
   processDataObservable = toObservable(this.processDataSignal);
@@ -112,44 +150,15 @@ export class DataService {
     this.selectedBusinessUnitSignal.set(unit);
   }
   
+ // Convenience methods (backward compatibility)
   async loadDataFromApi(url: string): Promise<void> {
-    try {
-      // Traditional HttpClient approach - more reliable for Angular 19.2
-      this.http.get<ProcessData[]>(url).subscribe(data => {
-        if (data) {
-          this.processDataSignal.set(data);
-        }
-      });
-      
-      // Alternative: If you want to try httpResource
-      /*
-      const processDataResource = httpResource<ProcessData[]>(url);
-      
-      // Wait for the resource to load
-      while (processDataResource.status() === 'loading') {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-      
-      // Check if the request was successful
-      if (processDataResource.status() === 'success') {
-        const data = processDataResource.value();
-        if (data) {
-          this.processDataSignal.set(data);
-        }
-      }
-      */
-    } catch (error) {
-      console.error('Error loading API data:', error);
-    }
+    this.useApiStrategy();
+    return this.loadData(url);
   }
-  
+
   async loadDataFromExcel(file: File): Promise<void> {
-    try {
-      const data = await this.excelService.importExcel(file);
-      this.processDataSignal.set(data);
-    } catch (error) {
-      console.error('Error loading Excel data:', error);
-    }
+    this.useExcelStrategy();
+    return this.loadData(file);
   }
   
   getUniqueBusinessUnits(): string[] {
